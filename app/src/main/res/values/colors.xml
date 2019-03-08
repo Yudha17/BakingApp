@@ -4,5 +4,11 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
-    <color name="colorBackgroundRecipeCard">#f1f1f1</color>
+    <color name="colorBackgroundLayout">#f1f1f1</color>
+    <color name="colorRecipeCard">#ffffff</color>
+    <color name="item_background">#fff4e5</color>
+    <color name="backgroundInitial">#FFF4e5</color>
+    <color name="gradient_color">#FBC02D</color>
+    <color name="gradient_primary">#A7FFEB</color>
+    <color name="colorRoundedBackground">#00B8D4</color>
 </resources>

@@ -1,90 +1,157 @@
 package com.example.slametsudarsono.bakingapp;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.slametsudarsono.bakingapp.adapter.RecipeAdapter;
-import com.example.slametsudarsono.bakingapp.connection.DataService;
-import com.example.slametsudarsono.bakingapp.connection.Service;
-import com.example.slametsudarsono.bakingapp.model.Recipe;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
+import com.example.slametsudarsono.bakingapp.data.model.Recipe;
+import com.example.slametsudarsono.bakingapp.utils.Constants;
+import com.example.slametsudarsono.bakingapp.utils.Injector;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeClickListener{
 
-    private static Context mContext;
+    private Context mContext;
     private RecyclerView recyclerView;
-    private List<Recipe> baking = new ArrayList<>();
+    private List<Recipe> recipeList = new ArrayList<>();
+    private SimpleIdlingResource mSimpleIdlingResource;
+    private boolean emptyDataShown;
+    private TextView empty_tv;
+    private ImageView empty_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_list);
+        setContentView(R.layout.activity_main);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        empty_tv = findViewById(R.id.empty_recipes_tv);
+        empty_image = findViewById(R.id.empty_image);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext() ));
+        final RecipeAdapter adapter = new RecipeAdapter(this, this);
+        recyclerView.setAdapter(adapter);
 
-        loadData();
-    }
+        if (mSimpleIdlingResource != null) {
+            mSimpleIdlingResource.setIdleState(false);
+        }
 
-    private void loadData() {
-        Service service = DataService.createService(Service.class);
-        Call<JsonArray> call = service.fetchBakingData();
-        call.enqueue(new Callback<JsonArray>() {
+
+        MainListFactory factory = Injector.provideMainListFactory(this);
+        MainListViewModel viewModel = ViewModelProviders.of(this, factory).get(MainListViewModel.class);
+
+        viewModel.getAllRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
-            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        String listString = response.body().toString();
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                //Set resources as idle at the end of database operations
+                if (mSimpleIdlingResource != null) {
+                    mSimpleIdlingResource.setIdleState(true);
+                }
 
-                        Type listType = new TypeToken<List<Recipe>>() {
-                        }.getType();
-                        baking = getListFromJson(listString, listType);
-
-                        recyclerView.setItemAnimator(new DefaultItemAnimator());
-                        recyclerView.setAdapter(new RecipeAdapter(getApplicationContext(), baking));
-                    }
+                if(recipes == null || recipes.isEmpty()){
+                    showEmpty();
+                } else{
+                    adapter.setRecipes(recipes);
+                    recipeList = recipes;
+                    showData();
                 }
             }
-
-            @Override
-            public void onFailure(Call<JsonArray> call, Throwable t) {
-
-            }
         });
+
+
     }
 
-    private static <T> List<T> getListFromJson(String jsonString, Type type) {
-        if (!isValid(jsonString)) {
-            return null;
-        }
-        return new Gson().fromJson(jsonString, type);
-    }
-
-    private static boolean isValid(String json) {
-        try {
-            new JsonParser().parse(json);
-            return true;
-        } catch (JsonSyntaxException jse) {
-            return false;
+    private void showData() {
+        if(emptyDataShown){
+            empty_tv.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            empty_image.setVisibility(View.GONE);
+            emptyDataShown = false;
         }
     }
 
+    private void showEmpty() {
+
+        if(!thereIsConnection()){
+            showSnack();
+        } else{
+            empty_tv.setText(R.string.server_error);
+        }
+        empty_image.setVisibility(View.VISIBLE);
+        empty_tv.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        emptyDataShown = true;
+    }
+
+    private void showSnack() {
+
+        Snackbar snackbar = Snackbar
+                .make(recyclerView, R.string.click_retry, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Injector.provideRepository(MainActivity.this).fetchAndSaveRecipes();
+                    }
+                });
+        snackbar.show();
+    }
+
+    private boolean thereIsConnection() {
+
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+
+    @Override
+    public void onRecipeClicked(int position) {
+
+        int recipeId = recipeList.get(position).getRecipeId();
+
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(Constants.WIDGET_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(Constants.LAST_CHOSEN_RECIPE_ID, recipeId);
+        editor.putString(Constants.LAST_CHOSEN_RECIPE_NAME, recipeList.get(position).getRecipeName());
+        editor.apply();
+
+
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(Constants.RECIPE_ID, recipeId);
+        startActivity(intent);
+    }
+
+    @NonNull
+    @VisibleForTesting
+    public IdlingResource getIdlingResource() {
+        if (mSimpleIdlingResource == null) {
+            mSimpleIdlingResource = new SimpleIdlingResource();
+        }
+
+        return mSimpleIdlingResource;
+    }
 }

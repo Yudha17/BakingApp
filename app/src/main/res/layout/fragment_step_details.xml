@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundInitial">
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/step_details_exoplayer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/step_details_thumbnail"
+        android:layout_width="@dimen/details_thumbnail_width"
+        android:layout_height="@dimen/details_thumbnail_height"
+        android:scaleType="centerInside"
+        android:layout_margin="@dimen/margin_standard"
+        android:padding="@dimen/padding_standard"
+        android:background="@drawable/rounded_cyan50_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        android:contentDescription="@string/cont_desc_video_placeholder"/>
+
+    <TextView
+        android:id="@+id/step_details_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/half_margin"
+        android:layout_marginBottom="@dimen/half_margin"
+        android:background="@drawable/rounded_white_background"
+        android:minHeight="@dimen/steps_details_text_height"
+        android:padding="@dimen/padding_standard"
+        app:layout_constraintTop_toBottomOf="@id/barrier2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="preheat the oven to 180 degrees etc..." />
+
+    <ImageButton
+        android:id="@+id/step_details_previous_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_arrow_back"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/step_details_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/step_details_description"
+        android:contentDescription="@string/previous_button"/>
+
+    <ImageButton
+        android:id="@+id/step_details_next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_arrow_forward"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/step_details_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/step_details_description"
+        android:contentDescription="@string/next_button"/>
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="step_details_exoplayer,step_details_thumbnail"
+        tools:layout_editor_absoluteY="511dp" />
+
+</android.support.constraint.ConstraintLayout>

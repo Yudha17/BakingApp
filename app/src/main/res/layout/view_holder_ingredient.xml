@@ -1,30 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:id="@+id/recipeIngred"
+        android:id="@+id/ingredientQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="-1dp"
-        android:layout_marginTop="10dp"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/recipeQuantity"
-        android:padding="10dp"
-        android:text="textview"
-        android:textAppearance="?attr/textAppearanceListItem" />
-
-    <TextView
-        android:id="@+id/recipeQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        android:text="2"
+        android:layout_margin="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2"
         android:textAppearance="?attr/textAppearanceListItem" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/ingredientMeasure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintStart_toEndOf="@id/ingredientQuantity"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="gr"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/ingredientName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/ingredientCheckbox"
+        app:layout_constraintStart_toEndOf="@id/ingredientMeasure"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="oil"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <CheckBox
+        android:id="@+id/ingredientCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_recipes">No recipes found. Could you check your connection and try again?</string>
+    <string name="click_retry">Click retry when connection is reestablished</string>
+    <string name="retry">Retry</string>
+    <string name="server_error">No response from the server. Please try again later.</string>
+    <string name="play_icon">play icon which signifies that items are clickable and opens a video if available</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="steps">Steps</string>
+    <string name="signifier_arrow">An arrow for signifying that this is clickable</string>
+    <string name="previous_button">The button which displays the previous step</string>
+    <string name="next_button">The button which displays the next step</string>
+    <string name="cont_desc_video_placeholder">When there is no video available a thumbnail is shown</string>
+</resources>
