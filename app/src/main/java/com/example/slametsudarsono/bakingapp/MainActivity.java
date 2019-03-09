@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         empty_tv = findViewById(R.id.empty_recipes_tv);
         empty_image = findViewById(R.id.empty_image);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView = findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext() ));
         final RecipeAdapter adapter = new RecipeAdapter(this, this);

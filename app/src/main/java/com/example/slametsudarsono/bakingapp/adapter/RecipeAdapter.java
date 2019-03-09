@@ -67,8 +67,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
         public RecipeHolder(View view) {
 
             super(view);
-            title = (TextView) view.findViewById(R.id.recipeTitle);
-            image = (ImageView) view.findViewById(R.id.recipeImage);
+            title = view.findViewById(R.id.recipeTitle);
+            image = view.findViewById(R.id.recipeImage);
 
             view.setOnClickListener(this);
 
@@ -80,22 +80,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
         }
     }
 
-
-//                    int pos = getAdapterPosition();
-//                    if (pos != RecyclerView.NO_POSITION){
-//                        Recipe clickedDataItem = recipeList.get(pos);
-//
-//                        Intent intent = new Intent(mContext, RecipeDetailActivity.class);
-//                        intent.putExtra("Recipe", clickedDataItem);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        mContext.startActivity(intent);
-//                        Toast.makeText(v.getContext(), "You clicked " + clickedDataItem.getName(), Toast.LENGTH_SHORT).show();
-//    }
-//}
-//        });
-//
-//        }
-//        }
 
     public interface RecipeClickListener {
         void onRecipeClicked(int position);

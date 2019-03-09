@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/list_fragment"
-        android:name=""
+        android:name="com.example.slametsudarsono.bakingapp.fragment.MasterListFragment"
         android:layout_width="@dimen/masterlist_width"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/step_details_fragment"
-        android:name=""
+        android:name="com.example.slametsudarsono.bakingapp.fragment.StepDetailsFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -61,8 +61,7 @@ public class StepDetailsFragment extends Fragment implements View.OnClickListene
     private boolean isLandscapeOfPhone;
     private boolean mBackwards;
 
-    public StepDetailsFragment() {
-    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
